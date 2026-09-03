@@ -1,6 +1,14 @@
-name: Deploy Migrations to Supabase
+name: Database CI/CD Pipeline
 
 on:
+  # 1. TEST STEP: Runs whenever a teammate opens a Pull Request against main
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'supabase/Migration/**'
+
+  # 2. DEPLOY STEP: Runs automatically when a PR is merged into main
   push:
     branches:
       - main
@@ -8,18 +16,29 @@ on:
       - 'supabase/Migration/**'
 
 jobs:
-  deploy:
+  database_pipeline:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Setup Supabase CLI Engine
+      - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
         with:
           version: latest
 
-      - name: Run Remote Migrations
+      # If it's a Pull Request, validate the SQL syntax without changing the live DB
+      - name: Verify SQL Syntax (PR Only)
+        if: github.event_name == 'pull_request'
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          echo "Validating database migration scripts..."
+          supabase db lint
+
+      # If the code was successfully merged into main, deploy it live
+      - name: Deploy to Supabase Production (Merge Only)
+        if: github.event_name == 'push'
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
