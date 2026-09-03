@@ -2,3 +2,4 @@
 CREATE TABLE IF NOT EXISTS source_system.dummytable (
     select 1
 );
+ 
