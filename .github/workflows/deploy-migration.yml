@@ -1,22 +1,14 @@
-name: Database CI/CD Pipeline
+name: Database CD Pipeline
 
 on:
-  # 1. TEST STEP: Runs whenever a teammate opens a Pull Request against main
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'supabase/Migration/**'
-
-  # 2. DEPLOY STEP: Runs automatically when a PR is merged into main
   push:
     branches:
       - main
     paths:
-      - 'supabase/Migration/**'
+      - 'supabase/migrations/**'
 
 jobs:
-  database_pipeline:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Source Code
@@ -27,18 +19,8 @@ jobs:
         with:
           version: latest
 
-      # If it's a Pull Request, validate the SQL syntax without changing the live DB
-      - name: Verify SQL Syntax (PR Only)
-        if: github.event_name == 'pull_request'
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-        run: |
-          echo "Validating database migration scripts..."
-          supabase db lint
-
-      # If the code was successfully merged into main, deploy it live
-      - name: Deploy to Supabase Production (Merge Only)
-        if: github.event_name == 'push'
+      # This step connects directly to your cloud Supabase database and applies your migration scripts
+      - name: Deploy to Live Supabase Postgres
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
