@@ -1,0 +1,8 @@
+# Ignore local Docker database storage states
+.docker/
+postgres_data/
+
+# Ignore system configuration caches
+.DS_Store
+Thumbs.db
+.env
