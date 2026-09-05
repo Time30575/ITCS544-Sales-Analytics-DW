@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  local_postgres:
+    image: postgres:16-alpine
+    container_name: team_data_warehouse
+    environment:
+      POSTGRES_USER: warehouse_user
+      POSTGRES_PASSWORD: team_password_2026
+      POSTGRES_DB: analytics_db
+    ports:
+      - "5432:5432"
+    volumes:
+      # This maps your local database/ folder straight inside Docker
+      - ./database:/docker-entrypoint-initdb.d/scripts
+      # This saves actual row records onto their hard drive so data persists
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
