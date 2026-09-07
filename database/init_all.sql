@@ -4,11 +4,11 @@ CREATE SCHEMA IF NOT EXISTS landing;
 CREATE SCHEMA IF NOT EXISTS staging;
 CREATE SCHEMA IF NOT EXISTS marts;
 
--- 2. Execute scripts sequentially relative to Docker's internal path
-\i '/docker-entrypoint-initdb.d/scripts/01_source_system/create_source_tables.sql';
-\i '/docker-entrypoint-initdb.d/scripts/02_data_warehouse/01_landing.sql';
-\i '/docker-entrypoint-initdb.d/scripts/02_data_warehouse/02_staging.sql';
-\i '/docker-entrypoint-initdb.d/scripts/02_data_warehouse/03_marts.sql';
+-- 2. Execute scripts relative to this file so Docker and host psql can both run it
+\ir '01_source_system/create_source_tables.sql'
+\ir '02_data_warehouse/01_landing.sql'
+\ir '02_data_warehouse/02_staging.sql'
+\ir '02_data_warehouse/03_mart.sql'
 
--- 3. Execute operational code objects (Add this line at the bottom)
-\i '/docker-entrypoint-initdb.d/scripts/03_procedures/prc_load_source_to_landing.sql';
+-- 3. Execute operational code objects
+\ir '03_procedure/01_landing_procedure.sql'
