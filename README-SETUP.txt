@@ -49,6 +49,15 @@ docker exec -i Sales_analytics_wh psql -U admin -d Sales_analytics `
 -f /docker-entrypoint-initdb.d/scripts/YOUR_CHANGED_FILE_NAME.sql
 ```
 
+### 5. (Optional) Go to pgadmin page for UI interface and SQL code execution friendly
+``` Open in Browser
+http://localhost:5050
+
+ID = admin@local.com
+
+PASSWORD = admin123456
+```
+
 
 
 Individual procedure call : Run this command to call the procedure, do change procedure name:
