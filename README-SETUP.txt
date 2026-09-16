@@ -9,7 +9,7 @@ docker compose up -d
 
 ### 1.5.1 Run only once! When you just start docker-postgres first time, after first time the table data is there in postgres eventhough you just restart docker.
 ```bash
-docker exec -i Sales_analytics_wh psql -U admin -d Sales_analytics -v ON_ERROR_STOP=1 -f /docker-entrypoint-initdb.d/scripts/init_all.sql
+docker exec -i Sales_analytics_wh psql -U admin -d Sales_analytics -v ON_ERROR_STOP=1 -f /docker-entrypoint-initdb.d/init_all.sql
 ```
 
 ### 1.5.2 reload raw csv if csv updated
@@ -30,9 +30,8 @@ docker exec -it Sales_analytics_wh psql -U admin -d Sales_analytics
 ```psql
 \dn
 ```
-### 2.2 check table : all are in psql
+### 2.2 check schema : all are in psql
 \dt source_system.*
-\dt landing.*
 \dt staging.*
 \dt marts.*
 
@@ -42,14 +41,17 @@ docker exec -it Sales_analytics_wh psql -U admin -d Sales_analytics
 
 ### 3. develop your SQL object in each .sql file
 
+### 3.5 Name your file with nickname_Table_name.sql but in the code you can keep only Table name as uaual.
+### for example : Time_table_raw_1.sql --> but in code : "CREATE TABLE IF NOT EXISTS source_system.table_raw_1"
+
 ### 4. test your .sql change
 ```bash
 docker exec -i Sales_analytics_wh psql -U admin -d Sales_analytics `
 -v ON_ERROR_STOP=1 `
--f /docker-entrypoint-initdb.d/scripts/YOUR_CHANGED_FILE_NAME.sql
+-f /docker-entrypoint-initdb.d/YOUR_CHANGED_FILE_NAME.sql
 ```
 
-### 5. (Optional) Go to pgadmin page for UI interface and SQL code execution friendly
+### 5. Go to pgadmin page for UI interface and SQL code execution friendly
 ``` Open in Browser
 http://localhost:5050
 
@@ -58,12 +60,24 @@ ID = admin@local.com
 PASSWORD = admin123456
 ```
 
+### 6. Query : call the procedure and validate your query in pgadmin sql editor.
 
-
-Individual procedure call : Run this command to call the procedure, do change procedure name:
-```bash
-docker exec -it Sales_analytics_wh psql -U admin -d Sales_analytics -c "CALL landing.prc_load_source_to_landing();"
+### 7. Done with result. go to init_all.sql --> go to --2 section
+add your .sql object in this FORMAT
 ```
+\ir 'folder/folder/nickname_Table_name.sql'
+```
+Example : \ir '01_source_system/create_source_tables.sql'
+
+
+
+
+
+
+
+
+
+
 
 ### USEFUL DOCKER COMMAND ###
 ### to startup docker
@@ -83,10 +97,15 @@ docker exec -it Sales_analytics_wh psql -U admin -d Sales_analytics
 
 ### to stop container, but not delete the data (volume)
 ```bash
-docker compose down -d
+docker compose down
 ```
 
 ### to stop container, and delete the data (volume), this will remove everything !!
 ```bash
 docker compose down -v
+```
+
+Individual procedure call : Run this command to call the procedure, do change procedure name:
+```bash
+docker exec -it Sales_analytics_wh psql -U admin -d Sales_analytics -c "CALL schema.your_procedure();"
 ```
