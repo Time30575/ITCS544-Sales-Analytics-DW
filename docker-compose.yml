@@ -14,8 +14,7 @@ services:
 
     volumes:
       # Run the master SQL script when PostgreSQL initializes a new volume.
-      - ./database/init_all.sql:/docker-entrypoint-initdb.d/00_init_all.sql:ro
-      - ./database:/docker-entrypoint-initdb.d/scripts:ro
+      - ./database:/docker-entrypoint-initdb.d:ro
       # This saves actual row records onto their hard drive so data persists
       - postgres_data:/var/lib/postgresql/data
 
