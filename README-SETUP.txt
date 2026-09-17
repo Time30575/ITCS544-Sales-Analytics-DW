@@ -7,18 +7,21 @@ Every time you pull changes from the `main` branch, run these commands inside yo
 docker compose up -d
 ```
 
-### 1.5.1 Run only once! When you just start docker-postgres first time, after first time the table data is there in postgres eventhough you just restart docker.
+### 1.5.1 Run this after deleting the volume or when initializing an existing volume
 ```bash
 docker exec -i Sales_analytics_wh psql -U admin -d Sales_analytics -v ON_ERROR_STOP=1 -f /docker-entrypoint-initdb.d/init_all.sql
 ```
 
-### 1.5.2 reload raw csv if csv updated
+This creates both source tables and loads both CSV files. PostgreSQL runs the same script automatically when `postgres_data` is created for the first time.
+
+### 1.5.2 Reload both source CSV files after a CSV update
 ```bash
-Get-Content .\database\01_source_system\raw_transactions.csv -Raw |
 docker exec -i Sales_analytics_wh psql -U admin -d Sales_analytics `
 -v ON_ERROR_STOP=1 `
--c "BEGIN; TRUNCATE TABLE source_system.tb_raw_transaction; \copy source_system.tb_raw_transaction FROM STDIN WITH (FORMAT csv, HEADER true); COMMIT;"
+-f /docker-entrypoint-initdb.d/01_source_system/load_source_data.sql
 ```
+
+The reload script truncates both source tables before loading, so it is safe to run again.
 
 ### 2. Run these command to verify database connection (it will launch psql in your terminal)
 ```bash
