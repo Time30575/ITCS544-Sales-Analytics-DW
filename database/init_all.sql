@@ -17,6 +17,6 @@ CREATE SCHEMA IF NOT EXISTS marts;
 \ir '02_data_warehouse/02_staging/Time_table_staging_example.sql'
 
 -- 3. Execute operational code objects
-\ir '03_procedure/01_landing_procedure.sql'
+\ir '03_procedure/Time_landing_procedure_example.sql'
 
 
