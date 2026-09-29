@@ -15,18 +15,27 @@ BEGIN
     )
     SELECT
         "Order ID",
-        REPLACE("Order Date", '-', '/'),
+
+        TO_CHAR(
+            TO_DATE("Order Date", 'YYYY-MM-DD'),
+            'MM/DD/YYYY'
+        ),
+
         "Region",
+
         CASE
             WHEN "Country" = 'US' THEN 'United States of America'
             WHEN "Country" = 'UK' THEN 'United Kingdom'
             ELSE "Country"
         END,
+
         "Item Type",
+
         CASE
             WHEN "Sales Channel" = 'Local' THEN 'Offline'
             ELSE "Sales Channel"
         END
+
     FROM source_system.tb_raw_transaction_dimension
     WHERE "Order Date" LIKE '2020%';
 

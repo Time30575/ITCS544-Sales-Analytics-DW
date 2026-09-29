@@ -14,10 +14,16 @@ BEGIN
     )
     SELECT
         "Order ID",
-        REPLACE("Ship Date", '-', '/'),
+
+        TO_CHAR(
+            TO_DATE("Ship Date", 'YYYY-MM-DD'),
+            'MM/DD/YYYY'
+        ),
+
         "Units Sold",
         REPLACE("Unit Price", ',', '.'),
         REPLACE("Unit Cost", ',', '.')
+
     FROM source_system.tb_raw_transaction_number
     WHERE "Ship Date" LIKE '2020%';
 
