@@ -5,9 +5,8 @@ CREATE SCHEMA IF NOT EXISTS source_system;
 -- this is landing area from source and cleanup with ETL.
 CREATE SCHEMA IF NOT EXISTS staging;
 
--- this is mart for snowflake schema and reporting.
+-- This is the marts schema for snowflake reporting.
 CREATE SCHEMA IF NOT EXISTS marts;
-
 
 -- 2. Execute scripts relative to this file so Docker and host psql can both run it
 \ir '01_source_system/Time_TB_RAW_TRANSACTION_DIMENSION.sql'
@@ -18,8 +17,9 @@ CREATE SCHEMA IF NOT EXISTS marts;
 \ir '02_data_warehouse/02_staging/Narathip_stg_dimension.sql'
 \ir '02_data_warehouse/02_staging/Narathip_stg_number.sql'
 
--- Mart
+-- Marts
 \ir '02_data_warehouse/02_mart/Time_table_mart_example.sql'
+\ir '02_data_warehouse/02_mart/Natthachaimongkol_mart.sql'
 
 -- Existing staging example
 \ir '02_data_warehouse/02_staging/Time_table_staging_example.sql'
@@ -30,3 +30,5 @@ CREATE SCHEMA IF NOT EXISTS marts;
 \ir '03_procedure/Narathip_etl_number.sql'
 
 \ir '03_procedure/Time_landing_procedure_example.sql'
+\ir '03_procedure/Natthachaimongkol_sp_dimension.sql'
+\ir '03_procedure/Natthachaimongkol_sp_fact.sql'

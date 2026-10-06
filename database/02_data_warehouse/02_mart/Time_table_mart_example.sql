@@ -1,1 +1,1 @@
---place holder for data mart table
+-- Placeholder for a table in the marts schema.

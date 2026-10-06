@@ -1,9 +1,9 @@
-CREATE OR REPLACE PROCEDURE mart.sp_populate_dimensions()
+CREATE OR REPLACE PROCEDURE marts.sp_populate_dimensions()
 LANGUAGE plpgsql
 AS $$
 BEGIN
     --Insert/Update Area Dimension
-    INSERT INTO mart.dim_area (region_id, region_value, country_value)
+    INSERT INTO marts.dim_area (region_id, region_value, country_value)
     SELECT DISTINCT 
         MD5(CONCAT(COALESCE(region, ''), '_', COALESCE(country, ''))),
         region,
@@ -15,7 +15,7 @@ BEGIN
         country_value = EXCLUDED.country_value;
 
     -- Insert/Update Product Type Dimension
-    INSERT INTO mart.dim_product_type (product_type_id, product_type_value)
+    INSERT INTO marts.dim_product_type (product_type_id, product_type_value)
     SELECT DISTINCT 
         MD5(item_type),
         item_type
@@ -25,7 +25,7 @@ BEGIN
     SET product_type_value = EXCLUDED.product_type_value;
 
     --Insert/Update Sales Channel Dimension
-    INSERT INTO mart.dim_sales_channel (sales_channel_id, sales_channel_value)
+    INSERT INTO marts.dim_sales_channel (sales_channel_id, sales_channel_value)
     SELECT DISTINCT 
         MD5(sales_channel),
         sales_channel
@@ -35,7 +35,7 @@ BEGIN
     SET sales_channel_value = EXCLUDED.sales_channel_value;
 
     --Insert/Update Order Date Dimension
-    INSERT INTO mart.dim_order_date (order_date_id, order_date_value, day, month, year)
+    INSERT INTO marts.dim_order_date (order_date_id, order_date_value, day, month, year)
     SELECT DISTINCT 
         MD5(order_date::text),
         order_date::date,
