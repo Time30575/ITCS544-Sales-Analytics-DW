@@ -21,12 +21,13 @@ BEGIN
         MD5(d.item_type),
         MD5(d.sales_channel),
         MD5(d.order_date::text),
-        n.units_sold,
-        n.unit_price,
-        n.unit_cost,
-        (n.units_sold * n.unit_price) AS total_revenue,
-        (n.units_sold * n.unit_cost) AS total_cost,
-        ((n.units_sold * n.unit_price) - (n.units_sold * n.unit_cost)) AS total_profit
+        n.units_sold::integer,
+        n.unit_price::numeric(12, 2),
+        n.unit_cost::numeric(12, 2),
+        (n.units_sold::integer * n.unit_price::numeric) AS total_revenue,
+        (n.units_sold::integer * n.unit_cost::numeric) AS total_cost,
+        ((n.units_sold::integer * n.unit_price::numeric) -
+         (n.units_sold::integer * n.unit_cost::numeric)) AS total_profit
     FROM staging.tb_stg_transaction_number n
     JOIN staging.tb_stg_transaction_dimension d ON n.order_id = d.order_id
     ON CONFLICT (order_id) DO UPDATE 
