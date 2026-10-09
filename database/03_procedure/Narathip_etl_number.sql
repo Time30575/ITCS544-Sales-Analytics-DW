@@ -15,17 +15,28 @@ BEGIN
     SELECT
         "Order ID",
 
-        TO_CHAR(
-            TO_DATE("Ship Date", 'YYYY-MM-DD'),
-            'MM/DD/YYYY'
-        ),
+        CASE
+            WHEN "Ship Date" LIKE '2020-%' THEN TO_CHAR(
+                TO_DATE("Ship Date", 'YYYY-MM-DD'),
+                'MM/DD/YYYY'
+            )
+            WHEN "Ship Date" LIKE '%-2020' THEN TO_CHAR(
+                TO_DATE("Ship Date", 'MM-DD-YYYY'),
+                'MM/DD/YYYY'
+            )
+            WHEN "Ship Date" LIKE '%/2020' THEN TO_CHAR(
+                TO_DATE("Ship Date", 'MM/DD/YYYY'),
+                'MM/DD/YYYY'
+            )
+            ELSE "Ship Date"
+        END,
 
         "Units Sold",
         REPLACE("Unit Price", ',', '.'),
         REPLACE("Unit Cost", ',', '.')
 
     FROM source_system.tb_raw_transaction_number
-    WHERE "Ship Date" LIKE '2020%';
+    ;
 
 END;
 $$;

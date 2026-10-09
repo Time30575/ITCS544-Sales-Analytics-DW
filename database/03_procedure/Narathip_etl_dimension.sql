@@ -16,10 +16,21 @@ BEGIN
     SELECT
         "Order ID",
 
-        TO_CHAR(
-            TO_DATE("Order Date", 'YYYY-MM-DD'),
-            'MM/DD/YYYY'
-        ),
+        CASE
+            WHEN "Order Date" LIKE '2020-%' THEN TO_CHAR(
+                TO_DATE("Order Date", 'YYYY-MM-DD'),
+                'MM/DD/YYYY'
+            )
+            WHEN "Order Date" LIKE '%-2020' THEN TO_CHAR(
+                TO_DATE("Order Date", 'MM-DD-YYYY'),
+                'MM/DD/YYYY'
+            )
+            WHEN "Order Date" LIKE '%/2020' THEN TO_CHAR(
+                TO_DATE("Order Date", 'MM/DD/YYYY'),
+                'MM/DD/YYYY'
+            )
+            ELSE "Order Date"
+        END,
 
         "Region",
 
@@ -37,7 +48,7 @@ BEGIN
         END
 
     FROM source_system.tb_raw_transaction_dimension
-    WHERE "Order Date" LIKE '2020%';
+    ;
 
 END;
 $$;
