@@ -7,21 +7,24 @@ Every time you pull changes from the `main` branch, run these commands inside yo
 docker compose up -d
 ```
 
-### 1.5.1 Run this after deleting the volume or when initializing an existing volume
+### 1.5.1 Initialize or rebuild the complete database
+
+This is the single setup script. It loads the dirty CSV prefixes plus the remaining rows from `5m Sales Records.csv`, rebuilds the mart tables, and populates staging and mart data. The 5M CSV is intentionally excluded from Git because it exceeds GitHub's regular file limit; place that file in `database/01_source_system/5m Sales Records.csv` before running setup. The temporary import table reads all columns from the combined CSV, but only the existing dimension and number columns are inserted into the raw tables. Re-running it replaces source rows with the CSV contents and drops/recreates mart tables; back up any database data you need to keep first.
+
 ```bash
 docker exec -i Sales_analytics_wh psql -U admin -d Sales_analytics -v ON_ERROR_STOP=1 -f /docker-entrypoint-initdb.d/init_all.sql
 ```
 
-This creates both source tables and loads both CSV files. PostgreSQL runs the same script automatically when `postgres_data` is created for the first time.
+PostgreSQL also runs it automatically when `postgres_data` is created for the first time. The area dimension tracks each country's region assignment with effective dates. The fact grain is one row per source transaction record: generated source row IDs preserve all five million records even though `Order ID` is not unique in the data.
 
-### 1.5.2 Reload both source CSV files after a CSV update
+### 1.5.2 Reload all source CSV files after a CSV update
 ```bash
 docker exec -i Sales_analytics_wh psql -U admin -d Sales_analytics `
 -v ON_ERROR_STOP=1 `
 -f /docker-entrypoint-initdb.d/01_source_system/load_source_data.sql
 ```
 
-The reload script truncates both source tables before loading, so it is safe to run again.
+The reload script truncates both source tables before loading, then combines 1,048,575 dirty-file records with rows 1,048,576 through 5,000,000 from the combined CSV. It expects the dirty files to match the beginning of the combined CSV by `Order ID`. It assigns matching generated source row IDs to the dimension and number sides so repeated order IDs do not multiply fact rows. It is safe to rerun when you intend to replace the raw source data with those files.
 
 ### 2. Run these command to verify database connection (it will launch psql in your terminal)
 ```bash

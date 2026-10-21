@@ -1,4 +1,5 @@
 CREATE TABLE IF NOT EXISTS source_system.TB_RAW_TRANSACTION_DIMENSION (
+    source_row_id  BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "Order ID"      VARCHAR(1000),
     "Order Date"    VARCHAR(100),
     "Region"        VARCHAR(100),

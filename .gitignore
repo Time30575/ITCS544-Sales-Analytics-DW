@@ -10,6 +10,9 @@ Thumbs.db
 # Ignore Main 5m Sales Records (For Mining)
 /database/04_data_mining/*.csv
 
+# Large local source dataset (exceeds GitHub's regular Git file limit)
+/database/01_source_system/5m Sales Records.csv
+
 # Python Virtual Environment
 .venv/
 
