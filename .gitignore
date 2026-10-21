@@ -6,3 +6,13 @@ postgres_data/
 .DS_Store
 Thumbs.db
 .env
+
+# Ignore Main 5m Sales Records (For Mining)
+/database/04_data_mining/*.csv
+
+# Python Virtual Environment
+.venv/
+
+# Python Cache
+__pycache__/
+*.pyc
