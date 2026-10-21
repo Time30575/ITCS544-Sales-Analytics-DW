@@ -6,6 +6,7 @@ BEGIN
     TRUNCATE TABLE staging.tb_stg_transaction_number;
 
     INSERT INTO staging.tb_stg_transaction_number (
+        source_row_id,
         order_id,
         ship_date,
         units_sold,
@@ -13,6 +14,7 @@ BEGIN
         unit_cost
     )
     SELECT
+        source_row_id,
         "Order ID",
 
         CASE

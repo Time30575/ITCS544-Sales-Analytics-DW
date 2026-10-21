@@ -6,6 +6,7 @@ BEGIN
     TRUNCATE TABLE staging.tb_stg_transaction_dimension;
 
     INSERT INTO staging.tb_stg_transaction_dimension (
+        source_row_id,
         order_id,
         order_date,
         region,
@@ -14,6 +15,7 @@ BEGIN
         sales_channel
     )
     SELECT
+        source_row_id,
         "Order ID",
 
         CASE

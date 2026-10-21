@@ -11,5 +11,6 @@
             "password": "admin123456",
             "database": "Sales_analytics"
         }
-    ]
+    ],
+    "python.terminal.useEnvFile": true
 }

@@ -1,4 +1,7 @@
 -- 1. Build out structural logical namespaces
+\set ON_ERROR_STOP on
+BEGIN;
+
 -- This is acting as source system.
 CREATE SCHEMA IF NOT EXISTS source_system;
 
@@ -17,6 +20,14 @@ CREATE SCHEMA IF NOT EXISTS marts;
 \ir '02_data_warehouse/02_staging/Narathip_stg_dimension.sql'
 \ir '02_data_warehouse/02_staging/Narathip_stg_number.sql'
 
+-- Rebuild mart tables so this setup also upgrades an existing database.
+-- Source tables are not dropped; their source CSVs were loaded above.
+DROP TABLE IF EXISTS marts.fact_sales;
+DROP TABLE IF EXISTS marts.dim_area;
+DROP TABLE IF EXISTS marts.dim_product_type;
+DROP TABLE IF EXISTS marts.dim_sales_channel;
+DROP TABLE IF EXISTS marts.dim_order_date;
+
 -- Marts
 \ir '02_data_warehouse/02_mart/Time_table_mart_example.sql'
 \ir '02_data_warehouse/02_mart/Natthachaimongkol_mart.sql'
@@ -32,3 +43,11 @@ CREATE SCHEMA IF NOT EXISTS marts;
 \ir '03_procedure/Time_landing_procedure_example.sql'
 \ir '03_procedure/Natthachaimongkol_sp_dimension.sql'
 \ir '03_procedure/Natthachaimongkol_sp_fact.sql'
+
+-- Populate the cleaned staging tables and the mart.
+CALL staging.etl_transaction_dimension();
+CALL staging.etl_transaction_number();
+CALL marts.sp_populate_dimensions();
+CALL marts.sp_populate_fact_sales();
+
+COMMIT;

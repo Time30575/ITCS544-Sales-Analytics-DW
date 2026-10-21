@@ -1,4 +1,5 @@
 CREATE TABLE IF NOT EXISTS source_system.TB_RAW_TRANSACTION_NUMBER (
+    source_row_id  BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "Order ID"     VARCHAR(1000),
     "Ship Date"    VARCHAR(100),
     "Units Sold"   VARCHAR(100),
