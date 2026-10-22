@@ -1,1 +1,0 @@
---place holder for Extraction data from source to landing using Store procedure.

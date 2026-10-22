@@ -22,6 +22,7 @@ CREATE SCHEMA IF NOT EXISTS marts;
 
 -- Rebuild mart tables so this setup also upgrades an existing database.
 -- Source tables are not dropped; their source CSVs were loaded above.
+DROP VIEW IF EXISTS marts.vw_sales_analytics;
 DROP TABLE IF EXISTS marts.fact_sales;
 DROP TABLE IF EXISTS marts.dim_area;
 DROP TABLE IF EXISTS marts.dim_product_type;
@@ -31,6 +32,7 @@ DROP TABLE IF EXISTS marts.dim_order_date;
 -- Marts
 \ir '02_data_warehouse/02_mart/Time_table_mart_example.sql'
 \ir '02_data_warehouse/02_mart/Natthachaimongkol_mart.sql'
+\ir '02_data_warehouse/02_mart/Natthachaimongkol_vw_sales_analytics.sql'
 
 -- Existing staging example
 \ir '02_data_warehouse/02_staging/Time_table_staging_example.sql'

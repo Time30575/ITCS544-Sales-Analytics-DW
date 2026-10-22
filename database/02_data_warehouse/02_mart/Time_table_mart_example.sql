@@ -1,1 +1,0 @@
--- Placeholder for a table in the marts schema.
