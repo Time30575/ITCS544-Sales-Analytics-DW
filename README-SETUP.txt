@@ -3,6 +3,7 @@
 Every time you pull changes from the `main` branch, run these commands inside your built-in VS Code terminal to sync your local Docker Postgres database with the team's latest SQL updates.
 
 ### 1. to startup docker
+
 ```bash
 docker compose up -d
 ```
@@ -76,42 +77,18 @@ add your .sql object in this FORMAT
 Example : \ir '01_source_system/create_source_tables.sql'
 
 
+### 8. Start Apache Superset for dashboards
 
+Start the services with `docker compose up -d`, then open
+`http://localhost:8088` and sign in with your existing Superset account.
 
+If the warehouse connection has not been added yet, create a PostgreSQL
+connection in **Settings → Database Connections** using:
 
+- **Host:** `local_postgres`
+- **Port:** `5432`
+- **Database:** `POSTGRES_DB` from `.env`
+- **Username / password:** `POSTGRES_USER` and `POSTGRES_PASSWORD` from `.env`
 
-
-
-
-
-
-### USEFUL DOCKER COMMAND ###
-### to startup docker
-```bash
-docker compose up -d
-```
-
-### to see docker status
-```bash
-docker ps
-```
-
-### to verify database existing
-```bash
-docker exec -it Sales_analytics_wh psql -U admin -d Sales_analytics
-```
-
-### to stop container, but not delete the data (volume)
-```bash
-docker compose down
-```
-
-### to stop container, and delete the data (volume), this will remove everything !!
-```bash
-docker compose down -v
-```
-
-Individual procedure call : Run this command to call the procedure, do change procedure name:
-```bash
-docker exec -it Sales_analytics_wh psql -U admin -d Sales_analytics -c "CALL schema.your_procedure();"
-```
+Use the `marts` schema when adding datasets. The pgAdmin login is not the
+PostgreSQL database login.

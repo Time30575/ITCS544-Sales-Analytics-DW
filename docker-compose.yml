@@ -18,6 +18,12 @@ services:
       # This saves actual row records onto their hard drive so data persists
       - postgres_data:/var/lib/postgresql/data
 
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
     restart: unless-stopped
 
 
@@ -38,5 +44,39 @@ services:
 
     restart: unless-stopped
 
+
+  superset:
+    build:
+      context: ./superset
+    container_name: Sales_analytics_superset
+    environment:
+      SUPERSET_CONFIG_PATH: /app/pythonpath/superset_config.py
+      SUPERSET_SECRET_KEY: ${SUPERSET_SECRET_KEY:?Set SUPERSET_SECRET_KEY in .env}
+    ports:
+      - "${SUPERSET_PORT:-8088}:8088"
+    volumes:
+      - superset_home:/app/superset_home
+      - ./superset/superset_config.py:/app/pythonpath/superset_config.py:ro
+    command:
+      - /bin/sh
+      - -c
+      - superset db upgrade && superset init && /usr/bin/run-server.sh
+    depends_on:
+      local_postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://localhost:8088/health')"
+      interval: 30s
+      timeout: 5s
+      retries: 10
+      start_period: 2m
+    restart: unless-stopped
+
+
 volumes:
   postgres_data:
+  superset_home:
