@@ -1,7 +1,8 @@
 TO installed
 1. Docker desktop
-2. SQLTools 's extention in vscode
-3. SQLTools PostgreSQL/Cockroach Driver 's extension in vscode
+
+TO download
+1. Manual download raw data link: https://excelbianalytics.com/downloads-18-sample-csv-files-data-sets-for-testing-sales/
 
 
 Git command, This will discard everything in your current branch and pull from main
