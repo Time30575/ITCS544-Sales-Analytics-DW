@@ -1,3 +1,13 @@
+# Preliminary.
+
+1. To download and extract Raw data of 5M records from this site: https://excelbianalytics.com/downloads-18-sample-csv-files-data-sets-for-testing-sales/
+2. Please refer file to image/RAW_DATA_TO_DOWNLOAD.jpg
+2.5 After extracted from zip, file will name "5m Sales Records", NO NEED TO RENAME IT!!.
+3. Put the file into folder database/01_source_system/5m Sales Records.csv
+4. Proceed to setup step/Team Database Sync Guide.
+
+
+
 # Team Database Sync Guide
 
 Every time you pull changes from the `main` branch, run these commands inside your built-in VS Code terminal to sync your local Docker Postgres database with the team's latest SQL updates.
